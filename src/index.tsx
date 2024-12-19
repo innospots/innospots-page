@@ -19,8 +19,7 @@ import ReactDOM from 'react-dom';
 import { AppRouter } from 'app/AppRouter';
 import { generateEntryPoint } from 'entryPointFactory';
 import './public-path';
-import { setGlobalConfigState, setMasterState } from './utils/globalState';
-import { importCoreWidgets } from './utils/sharedComponents';
+import { setGlobalConfigState, setMasterState } from './utils/globalState'; 
 
 function render(props) {
   const { container } = props;
@@ -51,9 +50,6 @@ export async function bootstrap(props) {
     //@ts-ignore
     __webpack_require__.S["default"] = undefined;
   } catch (e) {}
-
-  await importCoreWidgets();
-
   setMasterState({
     ...props
   });

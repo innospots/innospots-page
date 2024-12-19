@@ -3,7 +3,6 @@ const fs = require('fs');
 const WebpackBar = require('webpackbar');
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 // const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-const ModuleFederation = require('webpack/lib/container/ModuleFederationPlugin')
 const CracoLessPlugin = require('craco-less');
 
 const {
@@ -41,7 +40,7 @@ module.exports = {
         test: /\.(png|jpe?g|gif|webp|woff2?|eot|ttf|otf|svg)$/i,
         use: [
           {
-            loader: 'url-loader',
+            loader: 'url-loasder',
             options: {},
           },
         ],
@@ -69,28 +68,6 @@ module.exports = {
     plugins: [
       new WebpackBar(),
       new MonacoWebpackPlugin({ languages: [''] }),
-      new ModuleFederation({
-        // 导入模块
-        remotes: {
-          // 导入后给模块起个别名：“微应用名称@地址/导出的文件名”
-          coreModule: IS_DEV ? 'coreModule@http://localhost:8000/coreModule.js' : 'coreModule@/coreModule.js',
-          workflowModule: IS_DEV ? 'workflowModule@http://localhost:8882/apps/workflow/workflowModule.js' : 'workflowModule@/workflowModule.js'
-        },
-        // 应用 B 也可以对外提供模块，因此，也可以配置 filename 和 name
-        filename: 'visualization.js',
-        // 应用名称，当前模块自己的名字
-        name: 'visualization',
-        // shared: ["react", "react-dom"]
-        shared: {
-          "react": {
-            eager: true
-          },
-          "react-dom": {
-            eager: true
-          }
-        }
-      }),
-      // new BundleAnalyzerPlugin(),
     ],
     configure: (webpackConfig, { env, paths }) => {
       // paths.appPath='public'
@@ -111,14 +88,10 @@ module.exports = {
         libraryTarget: 'umd',
         globalObject: 'window'
       };
-
-      // if (!IS_DEV) {
-        webpackConfig.externals = {
-          'react': 'React',
-          'react-dom': 'ReactDOM',
-        };
-      // }
-
+      webpackConfig.externals = {
+        'react': 'React',
+        'react-dom': 'ReactDOM',
+      };
       /**
        * webpack split chunks
        */

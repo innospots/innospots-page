@@ -5,28 +5,14 @@ let componentContent = {
   workflow: {}
 };
 
-export const importCoreWidgets = async () => {
-  return new Promise(async (resolve, reject) => {
-    if (!Object.keys(componentContent.core).length) {
-      const coreWidgets = await import('coreModule/CoreWidget');
-      componentContent.core = coreWidgets;
-    }
-
-    // if (!Object.keys(componentContent.workflow).length) {
-    //   const workflowWidgets = await import('workflowModule/WorkflowWidgets');
-    //   componentContent.workflow = workflowWidgets;
-    // }
-
-    resolve(componentContent);
-    // reject(new Error('module error'));
-  })
-}
-
+export const setComponents = (module: string, components: any) => {
+  componentContent[module]=components
+};
 /**
  * 根据组件名称获取组件
  * @param name
  */
-export const getComponentByName = (module: string,name: string) => {
+export const getComponentByName = (module: string, name: string) => {
   return componentContent[module][name]
 };
 

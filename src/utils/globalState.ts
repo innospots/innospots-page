@@ -1,5 +1,6 @@
 import LS from './localStorage';
 import { entryParameters } from '../config/entryParameters';
+import { setComponents } from './sharedComponents';
 export type DatartComponentConfig = {
   pageId?: string,
   code: string,
@@ -61,6 +62,7 @@ export const POWERED_BY_QIANKUN = (window as any).__POWERED_BY_QIANKUN__;
 
 export const setMasterState = (data: any) => {
   curMasterState = data;
+  setComponents("core", data.componentContent)
 }
 
 export const getMasterState = (): any => curMasterState;
