@@ -49,7 +49,7 @@ export const generateEntryPoint = (EntryPointComponent, container) => {
         </ThemeProvider>
       </Provider>
     </InspectorWrapper>,
-    container,
+    container || document.querySelector('#root'),
   );
 
   // Hot reLoadable translation json files
@@ -65,4 +65,3 @@ export const generateEntryPoint = (EntryPointComponent, container) => {
     }
   }
 };
-

@@ -17,11 +17,11 @@ const {
 const IS_DEV = process.env.NODE_ENV !== 'production';
 
 const rewireEntries = [
-  {
-    name: 'shareDashboard',
-    entry: path.resolve(__dirname, './src/shareDashboard.entry.ts'),
-    outPath: 'shareDashboard.html',
-  }
+  // {
+  //   name: 'shareDashboard',
+  //   entry: path.resolve(__dirname, './src/shareDashboard.entry.ts'),
+  //   outPath: 'shareDashboard.html',
+  // }
 ];
 
 const defaultEntryName = 'main';
@@ -88,10 +88,11 @@ module.exports = {
         libraryTarget: 'umd',
         globalObject: 'window'
       };
-      webpackConfig.externals = {
-        'react': 'React',
-        'react-dom': 'ReactDOM',
-      };
+      // webpackConfig.externals = {
+      //   'react': 'React',
+      //   'react-dom': 'ReactDOM',
+      // };
+      
       /**
        * webpack split chunks
        */

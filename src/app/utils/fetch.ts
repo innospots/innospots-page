@@ -255,8 +255,12 @@ export async function downloadFile(id) {
 }
 
 export async function fetchPluginChart(path) {
+  // if (!path.includes('apps/visualization')) {
+  //   path = `apps/visualization/${path.replace(/^\//, '')}`;
+  // }
   const result = await request2(path, {
-    baseURL: '/',
+    // @ts-ignore
+    baseURL: window.__INJECTED_PUBLIC_PATH_BY_QIANKUN__ || '/',
     // baseURL: 'http://1.15.20.45:9800/',
     headers: { Accept: 'application/javascript' },
   }).catch(error => {

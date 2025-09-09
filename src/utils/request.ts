@@ -38,7 +38,7 @@ instance.interceptors.request.use(config => {
     }
   }
   const sessionData = ls['SESSION_DATA'];
-  const token = sessionData.rawToken;
+  const token = sessionData?.rawToken;
   if (token) {
     config.headers.Authorization = ['Bearer', token].join(' ');
   }
