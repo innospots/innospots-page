@@ -15,9 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { AppRouter } from 'app/AppRouter';
-import { generateEntryPoint } from 'entryPointFactory';
+import { generateEntryPoint, unmountApp } from 'entryPointFactory';
 import './public-path';
 import { setGlobalConfigState, setMasterState } from './utils/globalState'; 
 
@@ -76,7 +76,7 @@ export async function mount(props) {
 export async function unmount(props) {
    const { container } = props;
    console.log('unmount props', container);
-   ReactDOM.unmountComponentAtNode(container ? container.querySelector('#root') : document.querySelector('#root'));
+   unmountApp();
 }
 /**
  * 可选生命周期钩子，仅使用 loadMicroApp 方式加载微应用时生效

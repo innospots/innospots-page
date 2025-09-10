@@ -88,10 +88,10 @@ module.exports = {
         libraryTarget: 'umd',
         globalObject: 'window'
       };
-      // webpackConfig.externals = {
-      //   'react': 'React',
-      //   'react-dom': 'ReactDOM',
-      // };
+      webpackConfig.externals = {
+        'react': 'React',
+        'react-dom': 'ReactDOM',
+      };
       
       /**
        * webpack split chunks

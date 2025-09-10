@@ -23,7 +23,7 @@ import React, { Fragment } from 'react';
 import 'react-app-polyfill/ie11'; // TODO(Stephen): check if need it
 import 'react-app-polyfill/stable'; // TODO(Stephen): check if need it
 import { Inspector } from 'react-dev-inspector';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { HelmetProvider } from 'react-helmet-async';
 import { Provider } from 'react-redux';
 import { configureAppStore } from 'redux/configureStore';
@@ -33,24 +33,31 @@ import './locales/i18n';
 
 import 'styles/antd/styles.less';
 
+// 存储root实例以便卸载时使用
+let rootInstance: any = null;
+
 export const generateEntryPoint = (EntryPointComponent, container) => {
   const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
   const store = configureAppStore();
   Debugger.instance.setEnable(IS_DEVELOPMENT);
 
   const InspectorWrapper = IS_DEVELOPMENT ? Inspector : Fragment;
-  ReactDOM.render(
-    <InspectorWrapper>
-      <Provider store={store}>
-        <ThemeProvider>
-          <HelmetProvider>
-            <EntryPointComponent />
-          </HelmetProvider>
-        </ThemeProvider>
-      </Provider>
-    </InspectorWrapper>,
-    container || document.querySelector('#root'),
-  );
+  const targetContainer = container || document.querySelector('#root');
+  rootInstance = createRoot(targetContainer);
+  
+  if (rootInstance) {
+    rootInstance.render(
+      <InspectorWrapper>
+        <Provider store={store}>
+          <ThemeProvider>
+            <HelmetProvider>
+              <EntryPointComponent />
+            </HelmetProvider>
+          </ThemeProvider>
+        </Provider>
+      </InspectorWrapper>
+    );
+  }
 
   // Hot reLoadable translation json files
   if (module.hot) {
@@ -63,5 +70,13 @@ export const generateEntryPoint = (EntryPointComponent, container) => {
     if (typeof (window as any).__REACT_DEVTOOLS_GLOBAL_HOOK__ === 'object') {
       (window as any).__REACT_DEVTOOLS_GLOBAL_HOOK__.inject = () => void 0;
     }
+  }
+};
+
+// 导出卸载函数
+export const unmountApp = () => {
+  if (rootInstance) {
+    rootInstance.unmount();
+    rootInstance = null;
   }
 };

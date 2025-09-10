@@ -218,7 +218,7 @@ const ApplicationWidgetPanel: React.FC<ApplicationEditorProps> = memo(() => {
         curWidth += width;
       }
       return (
-          <div key={item.code} >
+          <div key={item.code} style={type === 'edit' ? {width: 650} : {}}>
             <div  className="appItem" onClick={()=>{selectAppWidget(item);}} >
               <div className="appSelected" hidden={item.code!=selectedAppWidget.code || type=='edit'} ><CheckCircleOutlined className="appSelectedIcon"/></div>
               <SharedComponent name={item['code']} module={item['module'] || 'core'} />
@@ -226,24 +226,31 @@ const ApplicationWidgetPanel: React.FC<ApplicationEditorProps> = memo(() => {
           </div>
         )
     })
+
+    console.log('appsComps:::::::::', type);
+    
     return (
       <div className="appList">
         <div className="appContainer" >
-          <GridLayout className="layout"
-                      cols={12}
-                      rowHeight={32}
-                      width={690}
-                      layout={layout}
-                      verticalCompact={true}
-                      compactType={'vertical'}>
-            {appsComps}
-          </GridLayout>
+          {
+            type === 'edit' ? appsComps : (
+              <GridLayout key={type} className="layout"
+                          cols={12}
+                          rowHeight={32}
+                          width={690}
+                          layout={layout}
+                          verticalCompact={true}
+                          compactType={'vertical'}>
+                {appsComps}
+              </GridLayout>
+            )
+          }
         </div>
       </div>
     )
   }
 
-  const getFormItem = (formItem: any) => {
+  const getFormItem = (formItem: any, index: number) => {
     let element;
     switch (formItem.type) {
       case 'RADIO':
@@ -289,27 +296,25 @@ const ApplicationWidgetPanel: React.FC<ApplicationEditorProps> = memo(() => {
         break;
     }
     return (
-      <>
-        <Col span={Math.max(formItem.gridSize, 2)}>
-          <div className={cls('formItem', {['hasError']: !!formError[formItem.name]})}>
-            <span style={{paddingTop: 24, display: 'inline-block'}}> {formItem.label}</span>
-            <Form.Item
-              noStyle
-              name={formItem.name}
-              label={formItem.name}
-              rules={[
-                {
-                  message: formItem.tips,
-                  required: formItem.required,
-                },
-              ]}
-            >
-              {element}
-            </Form.Item>
-            <div className={'error'}>{formError[formItem.name]}</div>
-          </div>
-        </Col>
-      </>
+      <Col key={`${formItem.name}-${formItem.type}-${index}`} span={Math.max(formItem.gridSize, 2)}>
+        <div className={cls('formItem', {['hasError']: !!formError[formItem.name]})}>
+          <span style={{paddingTop: 24, display: 'inline-block'}}> {formItem.label}</span>
+          <Form.Item
+            noStyle
+            name={formItem.name}
+            label={formItem.name}
+            rules={[
+              {
+                message: formItem.tips,
+                required: formItem.required,
+              },
+            ]}
+          >
+            {element}
+          </Form.Item>
+          <div className={'error'}>{formError[formItem.name]}</div>
+        </div>
+      </Col>
     );
   }
   const renderConfigContent = useCallback(() => {
@@ -322,8 +327,8 @@ const ApplicationWidgetPanel: React.FC<ApplicationEditorProps> = memo(() => {
                >
                   {
                     selectedAppWidget.configItem && selectedAppWidget.configItem.length>0 &&
-                    map(selectedAppWidget.configItem, (item) => {
-                      return getFormItem(item);
+                    map(selectedAppWidget.configItem, (item, index) => {
+                      return getFormItem(item, index);
                     })
                   }
           </Form>
@@ -346,7 +351,7 @@ const ApplicationWidgetPanel: React.FC<ApplicationEditorProps> = memo(() => {
     >
       <Container>
         { type=='add' ?  renderCategoryList() : '' }
-        { renderAppsList() }
+        { type !== 'hide' && renderAppsList() }
         { renderConfigContent() }
       </Container>
     </Modal>
